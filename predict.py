@@ -155,30 +155,22 @@ def store_information_into_mongo(observation, prediction):
 
 
 if __name__ == "__main__":
-    # df = load_single_row()
-    df = pd.read_json('dftest.json')
-    # observation = df.copy()
-    data = []
-    predictions = []
-    y_list = []
-    for i in xrange(df.shape[0]):
-        observation = df.iloc[i].copy()
-        try:
-            observation.drop(['acct_type', 'countryencoded', 'currencyencoded',
-                     'email_domainencoded', 'listedencoded', 'payout_typeencoded',
-                     'venue_countryencoded', 'venue_stateencoded'], axis=1, inplace=True)
-        except:
-            pass
-        observation = observation.reset_index()
-        # observation.drop('level_0', axis=1, inplace=True)
-        observation = correct_categorical_string_type_columns(observation)
-        observation = process_observation(observation)
-        observation = process_text_features(observation)
-        y = get_y(observation, 'fraud')
-        observation, X = get_x(observation)
-        prediction = predict(X, rfmodel)
-        data.append(observation)
-        predictions.append(prediction)
-        y_list.append(y)
-        # print classification_report(y, prediction)
-        # store_information_into_mongo(df, prediction)
+    df = load_single_row()
+    # df = pd.read_json('dftest.json')
+    observation = df.copy()
+    try:
+        observation.drop(['countryencoded', 'currencyencoded',
+                 'email_domainencoded', 'listedencoded', 'payout_typeencoded',
+                 'venue_countryencoded', 'venue_stateencoded'], axis=1, inplace=True)
+    except:
+        pass
+    observation = observation.reset_index()
+    # observation.drop('level_0', axis=1, inplace=True)
+    observation = correct_categorical_string_type_columns(observation)
+    observation = process_observation(observation)
+    observation = process_text_features(observation)
+    y = get_y(observation, 'fraud')
+    observation, X = get_x(observation)
+    prediction = predict(X, rfmodel)
+    # print classification_report(y, prediction)
+    # store_information_into_mongo(df, prediction)
